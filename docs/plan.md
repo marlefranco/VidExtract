@@ -66,7 +66,7 @@ This document outlines a comprehensive improvement plan for the VidExtract appli
 **Rationale:** Preview functionality will reduce errors and improve user confidence in the extraction results.
 
 ### 3.2 Output Customization
-**Current State:** Output is saved as "snippet.mp4" in the same directory as the input.  
+**Current State:** Output is saved as "snippet.avi" in the same directory as the input.
 **Goal:** Provide flexible output options.  
 **Proposed Changes:**
 - Add output file name and location selection

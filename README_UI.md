@@ -16,21 +16,21 @@ To edit the UI, you'll need:
 1. **Open the UI file**:
    - Launch Qt Designer
    - Open the `mainwindow.ui` file from the VidExtract project directory
-   
+
 2. **Make your changes**:
    - Drag and drop widgets from the widget box to add new elements
    - Select existing widgets to modify their properties
    - Use the property editor to change colors, sizes, fonts, etc.
    - Use the layout tools to arrange widgets
-   
+
 3. **Important guidelines**:
    - Do not change the names of existing widgets (e.g., `selectFileButton`, `startTimeEdit`, etc.)
    - Do not remove existing widgets that are used by the application
    - Keep the same basic structure of frames and layouts
-   
+
 4. **Save your changes**:
    - Save the file back to `mainwindow.ui` in the project directory
-   
+
 5. **Test your changes**:
    - Run the application with `python main.py` to see your changes in action
 
@@ -51,6 +51,25 @@ If you need more advanced customization:
 1. You can add new widgets and then extend the `MainWindow` class in `main.py` to handle them
 2. You can modify the stylesheets in the UI file to change the appearance
 3. For complex changes, you might need to modify both the UI file and the Python code
+
+## Batch Extract UI
+
+The batch extract application also uses a UI file:
+
+1. **Open the UI file**:
+   - Launch Qt Designer
+   - Open the `batchextract.ui` file from the VidExtract project directory
+
+2. **Make your changes**:
+   - Drag and drop widgets from the widget box to add new elements
+   - Select existing widgets to modify their properties
+   - Use the property editor to change colors, sizes, fonts, etc.
+   - Use the layout tools to arrange widgets
+
+3. **Important guidelines**:
+   - Do not change the names of existing widgets (e.g., `select_file_button`, `dir_path_label`, etc.)
+   - Do not remove existing widgets that are used by the application
+   - Keep the same basic structure of frames and layouts
 
 ## Troubleshooting
 

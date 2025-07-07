@@ -27,11 +27,12 @@ class TestVidExtract(unittest.TestCase):
 
     def test_parse_timestamp(self):
         """Test the parse_timestamp function with various formats."""
-        # Test default format (DD/MM/YYYY HH:mm:ss:SSS)
-        ts = parse_timestamp("01/02/2023 12:34:56:789")
+        # Test default format (MM/DD/YYYY HH:mm:ss:SSS)
+        # Set prioritize_time=False for testing to preserve the original date
+        ts = parse_timestamp("01/02/2023 12:34:56:789", prioritize_time=False)
         self.assertIsNotNone(ts)
-        self.assertEqual(ts.day, 1)
-        self.assertEqual(ts.month, 2)
+        self.assertEqual(ts.day, 2)
+        self.assertEqual(ts.month, 1)
         self.assertEqual(ts.year, 2023)
         self.assertEqual(ts.hour, 12)
         self.assertEqual(ts.minute, 34)
@@ -39,7 +40,7 @@ class TestVidExtract(unittest.TestCase):
         self.assertEqual(ts.microsecond, 789000)
 
         # Test alternative format (YYYY-MM-DD HH:mm:ss.SSS)
-        ts = parse_timestamp("2023-02-01 12:34:56.789")
+        ts = parse_timestamp("2023-02-01 12:34:56.789", prioritize_time=False)
         self.assertIsNotNone(ts)
         self.assertEqual(ts.day, 1)
         self.assertEqual(ts.month, 2)
@@ -49,50 +50,69 @@ class TestVidExtract(unittest.TestCase):
         self.assertEqual(ts.second, 56)
         self.assertEqual(ts.microsecond, 789000)
 
-        # Test time-only format (HH:mm:ss:SSS)
-        ts = parse_timestamp("12:34:56:789")
+        # Test time-only format (HH:mm:ss:SSS) with explicit reference date
+        reference_date = datetime(2023, 3, 15).date()  # Use a fixed date for consistent testing
+        ts = parse_timestamp("12:34:56:789", reference_date=reference_date, prioritize_time=False)
         self.assertIsNotNone(ts)
         self.assertEqual(ts.hour, 12)
         self.assertEqual(ts.minute, 34)
         self.assertEqual(ts.second, 56)
         self.assertEqual(ts.microsecond, 789000)
+        # Also verify the date components
+        self.assertEqual(ts.year, 2023)
+        self.assertEqual(ts.month, 3)
+        self.assertEqual(ts.day, 15)
 
         # Test invalid format
-        ts = parse_timestamp("invalid timestamp")
+        ts = parse_timestamp("invalid timestamp", prioritize_time=False)
         self.assertIsNone(ts)
+
+        # Test prioritize_time=True (default behavior in application)
+        reference_date = datetime(2023, 3, 15).date()
+        ts = parse_timestamp("01/02/2023 12:34:56:789", reference_date=reference_date, prioritize_time=True)
+        self.assertIsNotNone(ts)
+        # Date should be the reference date, not the date from the string
+        self.assertEqual(ts.day, 15)
+        self.assertEqual(ts.month, 3)
+        self.assertEqual(ts.year, 2023)
+        # Time should be from the string
+        self.assertEqual(ts.hour, 12)
+        self.assertEqual(ts.minute, 34)
+        self.assertEqual(ts.second, 56)
+        self.assertEqual(ts.microsecond, 789000)
 
     def test_ocr_config(self):
         """Test the OCRConfig class."""
         config = OCRConfig()
-        
+
         # Test default values
         self.assertEqual(config.region, OCRConfig.REGION_TOP_RIGHT)
         self.assertEqual(config.region_width, 300)
         self.assertEqual(config.region_height, 50)
-        
+
         # Test region coordinates calculation
         x, y, w, h = config.get_region_coords(1920, 1080)
         self.assertEqual(x, 1920 - 300)
         self.assertEqual(y, 0)
         self.assertEqual(w, 300)
         self.assertEqual(h, 50)
-        
+
         # Test different regions
         config.region = OCRConfig.REGION_TOP_LEFT
         x, y, w, h = config.get_region_coords(1920, 1080)
         self.assertEqual(x, 0)
         self.assertEqual(y, 0)
-        
+
         config.region = OCRConfig.REGION_BOTTOM_RIGHT
         x, y, w, h = config.get_region_coords(1920, 1080)
         self.assertEqual(x, 1920 - 300)
         self.assertEqual(y, 1080 - 50)
-        
+
         config.region = OCRConfig.REGION_BOTTOM_LEFT
         x, y, w, h = config.get_region_coords(1920, 1080)
         self.assertEqual(x, 0)
         self.assertEqual(y, 1080 - 50)
-        
+
         config.region = OCRConfig.REGION_CUSTOM
         config.custom_x = 100
         config.custom_y = 200
@@ -113,7 +133,7 @@ class TestVidExtract(unittest.TestCase):
     def test_timestamp_patterns(self):
         """Test that all timestamp patterns are valid."""
         from main import TIMESTAMP_PATTERNS
-        
+
         for pattern, format_str in TIMESTAMP_PATTERNS:
             # Create a sample timestamp string for this format
             if format_str == "%d/%m/%Y %H:%M:%S:%f":
@@ -128,11 +148,11 @@ class TestVidExtract(unittest.TestCase):
                 sample = "12:34:56.789"
             else:
                 self.fail(f"Unexpected format string: {format_str}")
-            
+
             # Test that the pattern matches the sample
             match = pattern.search(sample)
             self.assertIsNotNone(match, f"Pattern {pattern} did not match sample {sample}")
-            
+
             # Test that datetime.strptime can parse it
             try:
                 dt = datetime.strptime(match.group(1), format_str)

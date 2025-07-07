@@ -9,7 +9,7 @@ VidExtract is a GUI application that extracts video snippets from MKV files base
 1. Extract video snippets from MKV files based on start and end timestamps
 2. Recognize timestamp overlays in the top-right corner of video frames using OCR
 3. Support timestamp format: DD/MM/YYYY HH:mm:ss:SSS
-4. Save extracted snippets as MP4 files
+4. Save extracted snippets as AVI files
 
 ### User Interface
 1. Provide a graphical user interface for selecting input files and specifying timestamps
@@ -41,8 +41,8 @@ VidExtract is a GUI application that extracts video snippets from MKV files base
 3. Timestamps must appear in the top-right corner of the frames
 
 ### Output Constraints
-1. Output is saved as MP4 format
-2. Output is saved in the same directory as the input file with a fixed name "snippet.mp4"
+1. Output is saved as AVI format
+2. Output is saved in the same directory as the input file with a fixed name "snippet.avi"
 
 ## Known Limitations
 
