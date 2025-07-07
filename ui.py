@@ -15,6 +15,7 @@ class Ui_MainWindow(object):
         self.endTimeEdit = MainWindow.findChild(QtWidgets.QLineEdit, "endTimeEdit")
         self.progressBar = MainWindow.findChild(QtWidgets.QProgressBar, "progressBar")
         self.statusLabel = MainWindow.findChild(QtWidgets.QLabel, "statusLabel")
+        self.statusTextEdit = MainWindow.findChild(QtWidgets.QTextEdit, "statusTextEdit")
         self.extractButton = MainWindow.findChild(QtWidgets.QPushButton, "extractButton")
         self.actionOpen = MainWindow.findChild(QtGui.QAction, "actionOpen")
         self.actionExit = MainWindow.findChild(QtGui.QAction, "actionExit")
